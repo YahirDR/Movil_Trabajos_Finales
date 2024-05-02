@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,7 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 
 class MainActivity : ComponentActivity() {
-
+    private lateinit var fcmToken: String
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -47,13 +48,14 @@ class MainActivity : ComponentActivity() {
 
                 // Si se obtuvo el token, se muestra en un Toast y se imprime un mensaje de log.
                 val token: String? = task.result
-                Log.d("FCM Token", token, task.exception)
-                Toast.makeText(this, token, Toast.LENGTH_SHORT).show()
+                fcmToken = token ?: ""
+                Log.d("ESTE ES FCM Token:", fcmToken , task.exception)
+                Toast.makeText(this, fcmToken , Toast.LENGTH_SHORT).show()
             })
 
         setContent {
 
-            Greeting("token")
+            Greeting(fcmToken)
 
         }
 
@@ -78,11 +80,13 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "App de notificaciones:  $name!",
-        modifier = modifier
-    )
-}
+    SelectionContainer{
+        Text(
+            text = "App de notificaciones:  $name!",
+            modifier = modifier
+        )
+    }
 
+}
 
 
